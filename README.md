@@ -55,7 +55,28 @@ npm install
    - DB_NAME = '**your-local-database-name**' (example: "recipe_db")
    - SECRET_KEY = 'xT1tdO3CfMH01pjxC+guN1LWSt2nKvr5td6KUpw7Czg='
 
-6. Compile and run the project locally.
+6. Initialize the database (optional).
+
+   This project includes a seed and verification script at `scripts/init-db.js`.
+   It creates sample data and runs a quick CRUD check.
+
+```
+npm run init-db
+```
+
+   If you want to preserve existing tables and avoid dropping them, run:
+
+```
+npm run init-db:keep
+```
+
+   To force a full table wipe and recreate everything explicitly:
+
+```
+npm run init-db:wipe
+```
+
+7. Compile and run the project locally.
 
 ```
 npm run start

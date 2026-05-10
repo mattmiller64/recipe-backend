@@ -3,7 +3,7 @@ const Ingredient = db.ingredient;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Ingredient
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
   // Validate request
   if (req.body.name === undefined) {
     const error = new Error("Name cannot be empty for ingredient!");
@@ -26,20 +26,19 @@ exports.create = (req, res) => {
     pricePerUnit: req.body.pricePerUnit,
   };
   // Save Ingredient in the database
-  Ingredient.create(ingredient)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Ingredient.",
-      });
+  try {
+    const data = await Ingredient.create(ingredient);
+    res.send(data);
+  } catch (err) {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while creating the Ingredient.",
     });
+  }
 };
 
 // Retrieve all Ingredients from the database.
-exports.findAll = (req, res) => {
+exports.findAll = async (req, res) => {
   const ingredientId = req.query.ingredientId;
   var condition = ingredientId
     ? {
@@ -49,96 +48,91 @@ exports.findAll = (req, res) => {
       }
     : null;
 
-  Ingredient.findAll({ where: condition, order: [["name", "ASC"]] })
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving ingredients.",
-      });
+  try {
+    const data = await Ingredient.findAll({ where: condition, order: [["name", "ASC"]] });
+    res.send(data);
+  } catch (err) {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while retrieving ingredients.",
     });
+  }
 };
 
 // Find a single Ingredient with an id
-exports.findOne = (req, res) => {
+exports.findOne = async (req, res) => {
   const id = req.params.id;
 
-  Ingredient.findByPk(id)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Error retrieving Ingredient with id=" + id,
-      });
+  try {
+    const data = await Ingredient.findByPk(id);
+    res.send(data);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Error retrieving Ingredient with id=" + id,
     });
+  }
 };
 
 // Update a Ingredient by the id in the request
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
   const id = req.params.id;
 
-  Ingredient.update(req.body, {
-    where: { id: id },
-  })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          message: "Ingredient was updated successfully.",
-        });
-      } else {
-        res.send({
-          message: `Cannot update Ingredient with id=${id}. Maybe Ingredient was not found or req.body is empty!`,
-        });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Error updating Ingredient with id=" + id,
-      });
+  try {
+    const num = await Ingredient.update(req.body, {
+      where: { id: id },
     });
+    if (num == 1) {
+      res.send({
+        message: "Ingredient was updated successfully.",
+      });
+    } else {
+      res.send({
+        message: `Cannot update Ingredient with id=${id}. Maybe Ingredient was not found or req.body is empty!`,
+      });
+    }
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Error updating Ingredient with id=" + id,
+    });
+  }
 };
 
 // Delete a Ingredient with the specified id in the request
-exports.delete = (req, res) => {
+exports.delete = async (req, res) => {
   const id = req.params.id;
 
-  Ingredient.destroy({
-    where: { id: id },
-  })
-    .then((number) => {
-      if (number == 1) {
-        res.send({
-          message: "Ingredient was deleted successfully!",
-        });
-      } else {
-        res.send({
-          message: `Cannot delete Ingredient with id=${id}. Maybe Ingredient was not found!`,
-        });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Could not delete Ingredient with id=" + id,
-      });
+  try {
+    const number = await Ingredient.destroy({
+      where: { id: id },
     });
+    if (number == 1) {
+      res.send({
+        message: "Ingredient was deleted successfully!",
+      });
+    } else {
+      res.send({
+        message: `Cannot delete Ingredient with id=${id}. Maybe Ingredient was not found!`,
+      });
+    }
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Could not delete Ingredient with id=" + id,
+    });
+  }
 };
 
 // Delete all Ingredients from the database.
-exports.deleteAll = (req, res) => {
-  Ingredient.destroy({
-    where: {},
-    truncate: false,
-  })
-    .then((number) => {
-      res.send({ message: `${number} Ingredients were deleted successfully!` });
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while removing all ingredients.",
-      });
+exports.deleteAll = async (req, res) => {
+  try {
+    const number = await Ingredient.destroy({
+      where: {},
+      truncate: false,
     });
+    res.send({ message: `${number} Ingredients were deleted successfully!` });
+  } catch (err) {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while removing all ingredients.",
+    });
+  }
 };
