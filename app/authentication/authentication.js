@@ -1,5 +1,5 @@
 const db = require("../models");
-const { hashPassword } = require("./crypto");
+const { hashPassword, decrypt } = require("./crypto");
 const Session = db.session;
 const User = db.user;
 
@@ -22,14 +22,13 @@ authenticate = async (req, res, require = true) => {
       let i = credentials.indexOf(":");
       let email = credentials.slice(0, i);
       let password = credentials.slice(i + 1);
-      let user = {};
-      await User.findAll({ where: { email: email } })
-        .then((data) => {
-          user = data[0];
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      let user;
+      try {
+        const data = await User.findAll({ where: { email: email } });
+        user = data[0];
+      } catch (error) {
+        console.log(error);
+      }
       if (user != null) {
         let hash = await hashPassword(password, user.salt);
         if (Buffer.compare(user.password, hash) !== 0) {
@@ -53,14 +52,13 @@ authenticate = async (req, res, require = true) => {
     ) {
       let token = auth.slice(7);
       let sessionId = await decrypt(token);
-      let session = {};
-      await Session.findAll({ where: { id: sessionId } })
-        .then((data) => {
-          session = data[0];
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      let session;
+      try {
+        const data = await Session.findAll({ where: { id: sessionId } });
+        session = data[0];
+      } catch (error) {
+        console.log(error);
+      }
       if (session != null) {
         if (session.expirationDate >= Date.now()) {
           return {
@@ -98,14 +96,13 @@ authenticateRoute = async (req, res, next) => {
     ) {
       let token = auth.slice(7);
       let sessionId = await decrypt(token);
-      let session = {};
-      await Session.findAll({ where: { id: sessionId } })
-        .then((data) => {
-          session = data[0];
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      let session;
+      try {
+        const data = await Session.findAll({ where: { id: sessionId } });
+        session = data[0];
+      } catch (error) {
+        console.log(error);
+      }
       if (session != null) {
         console.log(session >= Date.now());
         console.log(Date.now());

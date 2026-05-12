@@ -1,6 +1,6 @@
 # Recipe Backend with Node
 
-This application allows users to create and maintain a list of recipes that have steps and ingredients. Please visit https://github.com/OC-ComputerScience/recipe-frontend for the Vue 3 frontend repository.
+This application allows users to create and maintain a list of recipes that have steps and ingredients. Please visit https://github.com/mattmiller64/recipe-frontend for the Vue 3 frontend repository.
 
 #### Please note:
 
@@ -11,7 +11,7 @@ This application allows users to create and maintain a list of recipes that have
 1. Clone the project into your **XAMPP/xamppfiles/htdocs** directory.
 
 ```
-git clone https://github.com/OC-ComputerScience/recipe-backend.git
+git clone https://github.com/mattmiller64/recipe-backend.git
 ```
 
 2. Install the project.
@@ -55,7 +55,28 @@ npm install
    - DB_NAME = '**your-local-database-name**' (example: "recipe_db")
    - SECRET_KEY = 'xT1tdO3CfMH01pjxC+guN1LWSt2nKvr5td6KUpw7Czg='
 
-6. Compile and run the project locally.
+6. Initialize the database (optional).
+
+   This project includes a seed and verification script at `scripts/init-db.js`.
+   It creates sample data and runs a quick CRUD check.
+
+```
+npm run init-db
+```
+
+   If you want to preserve existing tables and avoid dropping them, run:
+
+```
+npm run init-db:keep
+```
+
+   To force a full table wipe and recreate everything explicitly:
+
+```
+npm run init-db:wipe
+```
+
+7. Compile and run the project locally.
 
 ```
 npm run start
