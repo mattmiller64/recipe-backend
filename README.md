@@ -1,6 +1,6 @@
 # Recipe Backend with Node
 
-This application allows users to create and maintain a list of recipes that have steps and ingredients. Please visit https://github.com/OC-ComputerScience/recipe-frontend for the Vue 3 frontend repository.
+This application allows users to create and maintain a list of recipes that have steps and ingredients. Please visit https://github.com/mattmiller64/recipe-frontend for the Vue 3 frontend repository.
 
 #### Please note:
 
@@ -11,7 +11,7 @@ This application allows users to create and maintain a list of recipes that have
 1. Clone the project into your **XAMPP/xamppfiles/htdocs** directory.
 
 ```
-git clone https://github.com/OC-ComputerScience/recipe-backend.git
+git clone https://github.com/mattmiller64/recipe-backend.git
 ```
 
 2. Install the project.
