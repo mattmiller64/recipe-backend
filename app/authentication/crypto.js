@@ -10,6 +10,13 @@ const scryptOptions = {
   r: 8,
   p: 1,
 };
+
+if (!process.env.SECRET_KEY) {
+  throw new Error(
+    "Missing environment variable SECRET_KEY. Set SECRET_KEY before starting the application."
+  );
+}
+
 const secretKey = Buffer.from(process.env.SECRET_KEY, "base64");
 
 /**
@@ -66,10 +73,9 @@ decrypt = async (token) => {
       decipher.update(encrypted, "binary", "utf8") + decipher.final("utf8");
     return JSON.parse(str);
   } catch {
-    throw new Error({
-      code: "invalid-auth",
-      message: "Invalid authentication",
-    });
+    const err = new Error("Invalid authentication");
+    err.code = "invalid-auth";
+    throw err;
   }
 };
 
