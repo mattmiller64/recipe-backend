@@ -4,7 +4,7 @@ module.exports = (app) => {
   var router = require("express").Router();
 
   // Create a new Recipe
-  router.post("/recipes/", [authenticateRoute], Recipe.create);
+  router.post("/recipes/", [authenticateRoute], (req, res) => Recipe.create(req, res));
 
   // Retrieve all Recipes for user
   router.get(

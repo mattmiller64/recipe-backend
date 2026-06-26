@@ -6,7 +6,14 @@ const Ingredient = db.ingredient;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Recipe
-exports.create = async (req, res) => {
+exports.create = async (req, res, RecipeModel) => {
+  // If Express passed its `next` function as the 3rd arg, ignore it.
+  if (typeof RecipeModel === 'function' && RecipeModel.name === 'next') {
+    RecipeModel = Recipe;
+  } else {
+    RecipeModel = RecipeModel && typeof RecipeModel.create === "function" ? RecipeModel : Recipe;
+  }
+
   // Validate request
   if (req.body.name === undefined) {
     const error = new Error("Name cannot be empty for recipe!");
@@ -45,9 +52,10 @@ exports.create = async (req, res) => {
   };
   // Save Recipe in the database
   try {
-    const data = await Recipe.create(recipe);
+    const data = await RecipeModel.create(recipe);
     res.send(data);
   } catch (err) {
+    console.error(err);
     res.status(500).send({
       message:
         err.message || "Some error occurred while creating the Recipe.",
